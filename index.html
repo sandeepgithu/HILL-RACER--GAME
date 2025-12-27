@@ -1,0 +1,299 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HILL RACER</title>
+    <link rel="stylesheet" href="style.css">
+    
+</head>
+<body>
+    <canvas id="gameCanvas"></canvas>
+    
+    <!-- Top HUD -->
+    <div class="top-hud">
+        <div class="stats-grid">
+            <div class="stat-card">
+                <span class="stat-label">Distance</span>
+                <div class="stat-value">
+                    <span class="stat-icon">📏</span>
+                    <span id="distance">0</span>m
+                </div>
+            </div>
+            <div class="stat-card">
+                <span class="stat-label">Coins</span>
+                <div class="stat-value">
+                    <span class="stat-icon">🪙</span>
+                    <span id="coins">0</span>
+                </div>
+            </div>
+            <div class="stat-card">
+                <span class="stat-label">Speed</span>
+                <div class="stat-value">
+                    <span class="stat-icon">⚡</span>
+                    <span id="speed">0</span>
+                </div>
+            </div>
+            <div class="stat-card">
+                <span class="stat-label">Balance</span>
+                <div class="stat-value" id="balanceIndicator" style="font-size: 18px;">
+                    ⚖️ <span id="balanceText">STABLE</span>
+                </div>
+            </div>
+            <div class="stat-card">
+                <span class="stat-label">Fuel</span>
+                <div class="stat-value">
+                    <span class="stat-icon">⛽</span>
+                    <span id="fuelText">100</span>%
+                </div>
+                <div class="fuel-container">
+                    <div class="fuel-bar">
+                        <div class="fuel-fill" id="fuelBar" style="width: 100%"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Pause Button -->
+    <button class="pause-btn" id="pauseBtn" title="Pause">⏸</button>
+    
+    <!-- Controls -->
+    <div class="controls-container">
+        <div class="control-group">
+            <button class="control-btn gas-btn" id="gasBtn">▲</button>
+            <div class="control-label">GAS (↑)</div>
+        </div>
+        <div class="control-group">
+            <button class="control-btn" id="jumpBtn" style="background: linear-gradient(135deg, #9B59B6 0%, #8E44AD 100%); color: white;">🚀</button>
+            <div class="control-label">JUMP (SPACE)</div>
+        </div>
+        <div class="control-group">
+            <button class="control-btn" id="downBtn" style="background: linear-gradient(135deg, #3498DB 0%, #2980B9 100%); color: white;">▼</button>
+            <div class="control-label">DOWN (S)</div>
+        </div>
+        <div class="control-group">
+            <button class="control-btn brake-btn" id="brakeBtn">🛑</button>
+            <div class="control-label">BRAKE (↓)</div>
+        </div>
+    </div>
+    
+    <!-- Start Screen -->
+    <div class="screen" id="startScreen">
+        <div class="screen-content">
+            <div class="title">HILL RACER</div>
+            <div class="subtitle">Choose your vehicle and conquer the hills!</div>
+            <div style="font-family: 'Orbitron', sans-serif; font-size: 28px; color: var(--accent); margin-bottom: 20px;">
+                💰 Total Coins: <span id="menuCoins">0</span>
+            </div>
+            
+            <div class="vehicle-selection" id="vehicleSelection">
+                <div class="vehicle-card selected" data-vehicle="jeep">
+                    <div class="vehicle-icon">🚙</div>
+                    <div class="vehicle-name">JEEP</div>
+                    <div class="vehicle-stats">
+                        <div class="vehicle-stat">
+                            <span>Speed:</span>
+                            <div class="stat-bar"><div class="stat-bar-fill" style="width: 60%"></div></div>
+                        </div>
+                        <div class="vehicle-stat">
+                            <span>Fuel:</span>
+                            <div class="stat-bar"><div class="stat-bar-fill" style="width: 70%"></div></div>
+                        </div>
+                        <div class="vehicle-stat">
+                            <span>Grip:</span>
+                            <div class="stat-bar"><div class="stat-bar-fill" style="width: 80%"></div></div>
+                        </div>
+                    </div>
+                    <div class="vehicle-price" style="margin-top: 10px; color: var(--success); font-weight: 700;">OWNED</div>
+                </div>
+                
+                <div class="vehicle-card" data-vehicle="bike">
+                    <div class="vehicle-lock">🔒</div>
+                    <div class="vehicle-icon">🏍️</div>
+                    <div class="vehicle-name">BIKE</div>
+                    <div class="vehicle-stats">
+                        <div class="vehicle-stat">
+                            <span>Speed:</span>
+                            <div class="stat-bar"><div class="stat-bar-fill" style="width: 90%"></div></div>
+                        </div>
+                        <div class="vehicle-stat">
+                            <span>Fuel:</span>
+                            <div class="stat-bar"><div class="stat-bar-fill" style="width: 50%"></div></div>
+                        </div>
+                        <div class="vehicle-stat">
+                            <span>Grip:</span>
+                            <div class="stat-bar"><div class="stat-bar-fill" style="width: 60%"></div></div>
+                        </div>
+                    </div>
+                    <div class="vehicle-price" style="margin-top: 10px; color: var(--accent); font-weight: 700;">1000 🪙</div>
+                </div>
+                
+                <div class="vehicle-card" data-vehicle="truck">
+                    <div class="vehicle-lock">🔒</div>
+                    <div class="vehicle-icon">🚚</div>
+                    <div class="vehicle-name">TRUCK</div>
+                    <div class="vehicle-stats">
+                        <div class="vehicle-stat">
+                            <span>Speed:</span>
+                            <div class="stat-bar"><div class="stat-bar-fill" style="width: 40%"></div></div>
+                        </div>
+                        <div class="vehicle-stat">
+                            <span>Fuel:</span>
+                            <div class="stat-bar"><div class="stat-bar-fill" style="width: 90%"></div></div>
+                        </div>
+                        <div class="vehicle-stat">
+                            <span>Grip:</span>
+                            <div class="stat-bar"><div class="stat-bar-fill" style="width: 95%"></div></div>
+                        </div>
+                    </div>
+                    <div class="vehicle-price" style="margin-top: 10px; color: var(--accent); font-weight: 700;">1000 🪙</div>
+                </div>
+                
+                <div class="vehicle-card" data-vehicle="supercar">
+                    <div class="vehicle-lock">🔒</div>
+                    <div class="vehicle-icon">🏎️</div>
+                    <div class="vehicle-name">SUPER CAR</div>
+                    <div class="vehicle-stats">
+                        <div class="vehicle-stat">
+                            <span>Speed:</span>
+                            <div class="stat-bar"><div class="stat-bar-fill" style="width: 100%"></div></div>
+                        </div>
+                        <div class="vehicle-stat">
+                            <span>Fuel:</span>
+                            <div class="stat-bar"><div class="stat-bar-fill" style="width: 55%"></div></div>
+                        </div>
+                        <div class="vehicle-stat">
+                            <span>Grip:</span>
+                            <div class="stat-bar"><div class="stat-bar-fill" style="width: 70%"></div></div>
+                        </div>
+                    </div>
+                    <div class="vehicle-price" style="margin-top: 10px; color: var(--accent); font-weight: 700;">1000 🪙</div>
+                </div>
+                
+                <div class="vehicle-card" data-vehicle="monster">
+                    <div class="vehicle-lock">🔒</div>
+                    <div class="vehicle-icon">🚜</div>
+                    <div class="vehicle-name">MONSTER TRUCK</div>
+                    <div class="vehicle-stats">
+                        <div class="vehicle-stat">
+                            <span>Speed:</span>
+                            <div class="stat-bar"><div class="stat-bar-fill" style="width: 50%"></div></div>
+                        </div>
+                        <div class="vehicle-stat">
+                            <span>Fuel:</span>
+                            <div class="stat-bar"><div class="stat-bar-fill" style="width: 100%"></div></div>
+                        </div>
+                        <div class="vehicle-stat">
+                            <span>Grip:</span>
+                            <div class="stat-bar"><div class="stat-bar-fill" style="width: 100%"></div></div>
+                        </div>
+                    </div>
+                    <div class="vehicle-price" style="margin-top: 10px; color: var(--accent); font-weight: 700;">1000 🪙</div>
+                </div>
+                
+                <div class="vehicle-card" data-vehicle="racer">
+                    <div class="vehicle-lock">🔒</div>
+                    <div class="vehicle-icon">🏁</div>
+                    <div class="vehicle-name">RACING CAR</div>
+                    <div class="vehicle-stats">
+                        <div class="vehicle-stat">
+                            <span>Speed:</span>
+                            <div class="stat-bar"><div class="stat-bar-fill" style="width: 95%"></div></div>
+                        </div>
+                        <div class="vehicle-stat">
+                            <span>Fuel:</span>
+                            <div class="stat-bar"><div class="stat-bar-fill" style="width: 52%"></div></div>
+                        </div>
+                        <div class="vehicle-stat">
+                            <span>Grip:</span>
+                            <div class="stat-bar"><div class="stat-bar-fill" style="width: 75%"></div></div>
+                        </div>
+                    </div>
+                    <div class="vehicle-price" style="margin-top: 10px; color: var(--accent); font-weight: 700;">1000 🪙</div>
+                </div>
+            </div>
+            
+            <button class="btn" id="startBtn">START RACE</button>
+        </div>
+    </div>
+    
+    <!-- Pause Screen -->
+    <div class="screen hidden" id="pauseScreen">
+        <div class="screen-content">
+            <div class="title">PAUSED</div>
+            <div style="display: flex; gap: 20px; justify-content: center; margin-top: 30px;">
+                <button class="btn" id="resumeBtn">RESUME</button>
+                <button class="btn btn-secondary" id="mainMenuBtn">MAIN MENU</button>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Game Over Screen -->
+    <div class="screen hidden" id="gameOverScreen">
+        <div class="screen-content">
+            <div class="title">RACE COMPLETE</div>
+            <div class="subtitle">Your Performance</div>
+            
+            <div class="game-over-stats">
+                <div class="final-stat">
+                    <div class="final-stat-label">Distance Traveled</div>
+                    <div class="final-stat-value"><span id="finalDistance">0</span>m</div>
+                </div>
+                <div class="final-stat">
+                    <div class="final-stat-label">Coins Collected</div>
+                    <div class="final-stat-value"><span id="finalCoins">0</span></div>
+                </div>
+                <div class="final-stat">
+                    <div class="final-stat-label">Top Speed</div>
+                    <div class="final-stat-value"><span id="finalSpeed">0</span></div>
+                </div>
+                <div class="final-stat">
+                    <div class="final-stat-label">Total Score</div>
+                    <div class="final-stat-value"><span id="finalScore">0</span></div>
+                </div>
+            </div>
+            
+            <div class="upgrade-menu">
+                <h3 style="font-family: 'Orbitron', sans-serif; font-size: 24px; margin-bottom: 20px; color: var(--accent);">UPGRADE VEHICLE</h3>
+                <div class="upgrade-item">
+                    <div class="upgrade-info">
+                        <div class="upgrade-name">Engine Power</div>
+                        <div class="upgrade-level">Level: <span id="engineLevel">1</span>/5</div>
+                    </div>
+                    <button class="upgrade-btn" id="upgradeEngine" data-cost="50">
+                        Upgrade (50🪙)
+                    </button>
+                </div>
+                <div class="upgrade-item">
+                    <div class="upgrade-info">
+                        <div class="upgrade-name">Fuel Tank</div>
+                        <div class="upgrade-level">Level: <span id="fuelLevel">1</span>/5</div>
+                    </div>
+                    <button class="upgrade-btn" id="upgradeFuel" data-cost="40">
+                        Upgrade (40🪙)
+                    </button>
+                </div>
+                <div class="upgrade-item">
+                    <div class="upgrade-info">
+                        <div class="upgrade-name">Tire Grip</div>
+                        <div class="upgrade-level">Level: <span id="gripLevel">1</span>/5</div>
+                    </div>
+                    <button class="upgrade-btn" id="upgradeGrip" data-cost="30">
+                        Upgrade (30🪙)
+                    </button>
+                </div>
+            </div>
+            
+            <div style="display: flex; gap: 20px; justify-content: center; margin-top: 20px;">
+                <button class="btn" id="restartBtn">RACE AGAIN</button>
+                <button class="btn btn-secondary" id="menuBtn">MAIN MENU</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+
+   
+</body>
+</html>
